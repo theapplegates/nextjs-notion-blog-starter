@@ -52,7 +52,7 @@ export default function Index({ articles, categories, blog, allblog }: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  const { site } = context.params;
+  const { site } = context.query;
 
   if (!site) {
     return {

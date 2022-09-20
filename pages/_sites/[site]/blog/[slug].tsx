@@ -103,15 +103,14 @@ const ArticlePage = ({
 };
 
 export const getServerSideProps = async ({ params: { slug, site } }) => {
-  const data = await getAllArticles(process.env.BLOG_DATABASE_ID);
-
   const blog = await prisma.blogWebsite.findFirst({
     where: { slug: site },
     select: blogSelect
   });
 
+  const data = await getAllArticles(blog.notionBlogDatabaseId);
   const page = getArticlePage(data, slug);
-  const result = await getArticlePageData(page, slug, process.env.BLOG_DATABASE_ID);
+  const result = await getArticlePageData(page, slug, blog.notionBlogDatabaseId);
 
   return {
     props: {
