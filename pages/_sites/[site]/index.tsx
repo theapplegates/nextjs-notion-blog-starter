@@ -12,9 +12,6 @@ import prisma, { blogSelect } from 'utils/prisma';
 export default function Index({ articles, categories, blog, allblog }: any) {
   const [selectedTag, setSelectedTag] = useState<string>(null);
 
-  console.log({ articles, categories, blog, allblog });
-
-  // return <div>ahoj</div>;
   const filteredArticles = filterArticles(articles, selectedTag);
 
   if (!blog) {
@@ -62,18 +59,10 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  console.log('site', site);
-
   const blog = await prisma.blogWebsite.findFirst({
     where: { slug: site },
     select: blogSelect
   });
-
-  const allblog = await prisma.blogWebsite.findMany({
-    select: blogSelect
-  });
-
-  console.log('allblog', allblog);
 
   if (!blog?.title) {
     return {
@@ -83,8 +72,6 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  console.log('blog', blog);
-
   const data = await getAllArticles(blog.notionBlogDatabaseId);
 
   const { articles, categories } = convertToArticleList(data);
@@ -93,7 +80,6 @@ export async function getServerSideProps(context: any) {
     props: {
       blog,
       articles,
-      allblog,
       categories
     }
   };
