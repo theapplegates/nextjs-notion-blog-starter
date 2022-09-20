@@ -14,7 +14,7 @@ export default function Index({ articles, categories, blog, allblog }: any) {
 
   console.log({ articles, categories, blog, allblog });
 
-  return <div>ahoj</div>;
+  // return <div>ahoj</div>;
   const filteredArticles = filterArticles(articles, selectedTag);
 
   if (!blog) {

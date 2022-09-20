@@ -102,7 +102,9 @@ const ArticlePage = ({
   );
 };
 
-export const getServerSideProps = async ({ params: { slug, site } }) => {
+export const getServerSideProps = async context => {
+  const { site, slug } = context.query;
+
   const blog = await prisma.blogWebsite.findFirst({
     where: { slug: site },
     select: blogSelect
