@@ -110,9 +110,14 @@ export const getServerSideProps = async context => {
     select: blogSelect
   });
 
-  const data = await getAllArticles(blog.notionBlogDatabaseId);
+  const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret);
   const page = getArticlePage(data, slug);
-  const result = await getArticlePageData(page, slug, blog.notionBlogDatabaseId);
+  const result = await getArticlePageData(
+    page,
+    slug,
+    blog.notionBlogDatabaseId,
+    blog.notionSecret
+  );
 
   return {
     props: {

@@ -72,7 +72,7 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  const data = await getAllArticles(blog.notionBlogDatabaseId);
+  const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret);
 
   const { articles, categories } = convertToArticleList(data);
 

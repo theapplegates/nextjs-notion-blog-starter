@@ -1,11 +1,14 @@
 import { Client } from '@notionhq/client';
 import slugify from 'slugify';
 
-const notion = new Client({
-  auth: process.env.NOTION_SECRET
-});
 
-export const getAllArticles = async databaseId => {
+
+export const getAllArticles = async (databaseId, notionSecret) => {
+
+  const notion = new Client({
+    auth: notionSecret
+  });
+
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
@@ -70,7 +73,7 @@ export const convertToArticleList = (tableData: any) => {
   return { articles, categories };
 };
 
-export const getMoreArticlesToSuggest = async (databaseId, currentArticleTitle) => {
+export const getMoreArticlesToSuggest = async (databaseId, currentArticleTitle, notion) => {
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
@@ -126,13 +129,18 @@ export function shuffleArray(array: Array<any>) {
   return array;
 }
 
-export const getArticlePageData = async (page: any, slug: any, databaseId) => {
+export const getArticlePageData = async (page: any, slug: any, databaseId, notionSecret) => {
+
+  const notion = new Client({
+    auth: notionSecret
+  });
+
   let content = [];
   let title = '';
 
   title = page.properties.Name.title[0].plain_text;
 
-  const moreArticles: any = await getMoreArticlesToSuggest(databaseId, title);
+  const moreArticles: any = await getMoreArticlesToSuggest(databaseId, title, notion);
 
   let blocks = await notion.blocks.children.list({
     block_id: page.id
