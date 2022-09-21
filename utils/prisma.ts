@@ -21,8 +21,6 @@ export const blogSelect = {
   profileUrl: true,
   headerDescription: true,
   footerText: true,
-  language: true,
-  locale: true,
   ogBanner: true,
   github: true,
   twitter: true,

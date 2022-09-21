@@ -3,18 +3,13 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 
-import EditForm from '../components/EditForm';
-import Container from '../components/Container';
+import EditForm from '../../components/EditForm';
+import Container from '../../components/Container';
 import prisma, { blogSelect } from 'utils/prisma';
 
-const timezone = Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone || '';
-
-const date = new Date();
-const timezoneOffset = date?.getTimezoneOffset()?.toString() || '';
-
-export default function Index({ profile, session }: any) {
+export default function Index({ blog, session }: any) {
   const { register, handleSubmit, setValue, watch, control } = useForm({
-    defaultValues: profile
+    defaultValues: blog
   });
   const router = useRouter();
 
@@ -40,8 +35,8 @@ export default function Index({ profile, session }: any) {
   }
   const onSubmitForm = async (values: any) => {
     const config: AxiosRequestConfig = {
-      url: profile?.slug ? 'api/update-blog' : '/api/create-blog',
-      data: { ...values, timezone, timezoneOffset },
+      url: blog?.slug ? '/api/update-blog' : '/api/create-blog',
+      data: { ...values, id: blog.id },
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
@@ -54,7 +49,7 @@ export default function Index({ profile, session }: any) {
   };
 
   const editFormProps = {
-    profile,
+    blog,
     register,
     handleSubmit,
     setValue,
@@ -78,26 +73,32 @@ export default function Index({ profile, session }: any) {
 }
 
 export const getServerSideProps = async (context: any) => {
+  const { slug } = context.query;
+
   const session = await getSession(context);
+
+  console.log('session', session);
 
   if (!session?.user?.email) {
     return {
       props: {
         session: null,
-        profile: null
+        blog: null
       }
     };
   }
 
-  const profile = await prisma.blogWebsite.findFirst({
-    where: { email: session.user.email },
-    select: blogSelect
+  const blog = await prisma.blogWebsite.findFirst({
+    where: { slug },
+    select: { ...blogSelect, id: true }
   });
+
+  console.log(blog);
 
   return {
     props: {
       session,
-      profile
+      blog
     }
   };
 };

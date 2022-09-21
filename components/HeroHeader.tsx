@@ -7,7 +7,7 @@ export default function HeroHeader({ blog }: any) {
     <div className="py-24 text-center bg-gray-100">
       <Container>
         {blog?.profileUrl && (
-          <Image
+          <img
             src={blog.profileUrl}
             className="mx-auto rounded-full"
             width={96}

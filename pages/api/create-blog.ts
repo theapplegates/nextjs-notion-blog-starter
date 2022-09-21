@@ -16,8 +16,6 @@ const createBlog = async (req: any, res: any) => {
       profileUrl,
       headerDescription,
       footerText,
-      language,
-      locale,
       ogBanner,
       github,
       twitter,
@@ -41,6 +39,8 @@ const createBlog = async (req: any, res: any) => {
 
     const autoSlug = slugify(session?.user?.name).toLowerCase() + random2Numbers;
 
+    console.log('slug', slug)
+
     const profile = await prisma.blogWebsite.create({
       data: {
         title,
@@ -49,8 +49,6 @@ const createBlog = async (req: any, res: any) => {
         profileUrl,
         headerDescription,
         footerText,
-        language,
-        locale,
         ogBanner,
         github,
         twitter,
@@ -63,7 +61,6 @@ const createBlog = async (req: any, res: any) => {
         umamiId,
         umamiUrl,
         slug: slug || autoSlug,
-
         email: session.user.email,
         user: { connect: { email: session.user.email } }
       }

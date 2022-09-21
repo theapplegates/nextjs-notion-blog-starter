@@ -4,6 +4,7 @@ import prisma from 'utils/prisma';
 const updateBlog = async (req: any, res: any) => {
   try {
     const {
+      id,
       title,
       author,
       slug,
@@ -11,8 +12,6 @@ const updateBlog = async (req: any, res: any) => {
       profileUrl,
       headerDescription,
       footerText,
-      language,
-      locale,
       ogBanner,
       github,
       twitter,
@@ -32,13 +31,21 @@ const updateBlog = async (req: any, res: any) => {
       return res.status(401);
     }
 
+    const blog = await prisma.blogWebsite.findFirst(id)
+
+    console.log('blog', blog)
+
+    if(blog.email !== session?.user?.email) {
+      return res.status(402);
+    }
+
     const profile = await prisma.blogWebsite.update({
       where: {
-        email: session.user.email
+        id
       },
       data: {
         updatedAt: new Date(),
-        email: session.user.email,
+        email: blog.email,
         title,
         author,
         slug,
@@ -46,8 +53,6 @@ const updateBlog = async (req: any, res: any) => {
         profileUrl,
         headerDescription,
         footerText,
-        language,
-        locale,
         ogBanner,
         github,
         twitter,
@@ -64,6 +69,7 @@ const updateBlog = async (req: any, res: any) => {
 
     return res.status(200).json(profile);
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error);
   }
 };

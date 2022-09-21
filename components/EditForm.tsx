@@ -14,14 +14,14 @@ const defaultSocialInputs = [
     label: 'Github',
     prefix: <IconBrandGithub className="w-4" />,
     placeholder: 'username',
-    helper: 'Your github profile url'
+    helper: 'Your github blog url'
   },
   {
     id: 'linkedin',
     label: 'Linkedin',
     prefix: <IconBrandLinkedin className="w-4" />,
     placeholder: 'username',
-    helper: 'Your linkedin profile url'
+    helper: 'Your linkedin blog url'
   },
   {
     id: 'website',
@@ -36,7 +36,7 @@ const defaultSocialInputs = [
     label: 'Twitter',
     prefix: <IconBrandTwitter className="w-4" />,
     placeholder: 'username',
-    helper: 'Your twitter profile url'
+    helper: 'Your twitter blog url'
   }
 ];
 
@@ -63,12 +63,20 @@ const defaultBaseInputs = [
     helper: ''
   },
   {
+    id: 'slug',
+    label: 'slug',
+    component: Input,
+    placeholder: '',
+    helper: ''
+  },
+  {
     id: 'profileUrl',
     label: 'profileUrl',
     component: Input,
     placeholder: '',
     helper: ''
   },
+
   {
     id: 'headerDescription',
     label: 'headerDescription',
@@ -79,20 +87,6 @@ const defaultBaseInputs = [
   {
     id: 'footerText',
     label: 'footerText',
-    component: Input,
-    placeholder: '',
-    helper: ''
-  },
-  {
-    id: 'language',
-    label: 'language',
-    component: Input,
-    placeholder: '',
-    helper: ''
-  },
-  {
-    id: 'locale',
-    label: 'locale',
     component: Input,
     placeholder: '',
     helper: ''
@@ -145,7 +139,7 @@ const integrations = [
 ];
 
 export default function EditForm({
-  profile,
+  blog,
   register,
   handleSubmit,
   formState,
@@ -154,16 +148,17 @@ export default function EditForm({
   onSubmitForm,
   control
 }: any) {
+  console.log(blog);
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="space-y-8">
           <Card>
             <div className="mb-4 md:col-span-1">
-              <h3 className="text-xl font-medium leading-6 text-gray-900">Profile</h3>
+              <h3 className="text-xl font-medium leading-6 text-gray-900">blog</h3>
               <p className="mt-1 text-sm text-gray-500">
                 This information is the most prominent information displayed publicly on
-                your profile.
+                your blog.
               </p>
             </div>
             <div className="mt-5 space-y-6 md:mt-0 md:col-span-2">
@@ -235,7 +230,7 @@ export default function EditForm({
 
           <div className="flex justify-end space-x-4">
             <button type="submit">
-              <div>{profile?.slug ? 'Update profile' : ' Create Profile'}</div>
+              <div>{blog?.slug ? 'Update blog' : ' Create blog'}</div>
             </button>
           </div>
         </div>
