@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { getSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import prisma, { blogSelect } from 'utils/prisma';
+import { signOut } from 'next-auth/react';
 
 export default function Index({ blogs }) {
-  console.log(blogs);
   const router = useRouter();
 
   const removeBlog = async (id: any) => {
@@ -22,6 +22,32 @@ export default function Index({ blogs }) {
       router.reload();
     }
   };
+
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'unauthenticated') {
+    return (
+      <div className="flex-shrink-0 order-3 w-full mt-2 sm:order-2 sm:mt-0 sm:w-auto">
+        <div
+          onClick={e => {
+            e.preventDefault();
+            signIn('google', { callbackUrl: '/' });
+          }}
+        >
+          <button>
+            <div className="flex items-center space-x-2">
+              <img src="/icons/google.svg" className="w-4 h-4" />
+              <div>Get started</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <div className="h-screen">
@@ -32,6 +58,8 @@ export default function Index({ blogs }) {
             <Link href="/subscription" passHref>
               <button>Go Premium</button>
             </Link>
+
+            <button onClick={() => signOut()}>Sign out</button>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -68,6 +96,18 @@ export default function Index({ blogs }) {
                         >
                           delete
                         </div>
+
+                        <div
+                          onClick={e => {
+                            e.preventDefault();
+                            window.open(
+                              `https://${directory.slug}.notionlist.io`,
+                              '_blank'
+                            );
+                          }}
+                        >
+                          <div className=" text-[14px] text-gray-400">visit</div>
+                        </div>
                       </div>
 
                       <div className="text-[14px] text-gray-500">{directory.title}</div>
@@ -85,22 +125,10 @@ export default function Index({ blogs }) {
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
 
-  console.log(session);
-
   const blogs = await prisma.blogWebsite.findMany({
     where: { email: session?.user.email },
     select: { ...blogSelect, id: true }
   });
 
-  console.log(blogs);
-
   return { props: { session, blogs } };
-
-  // return {
-  //   props: {
-  //     blog,
-  //     articles,
-  //     categories
-  //   }
-  // };
 }

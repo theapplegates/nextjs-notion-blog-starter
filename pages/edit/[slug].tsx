@@ -20,7 +20,7 @@ export default function Index({ blog, session }: any) {
         <div
           onClick={e => {
             e.preventDefault();
-            signIn('google', { callbackUrl: '/edit' });
+            signIn('google', { callbackUrl: '/' });
           }}
         >
           <button>
@@ -92,8 +92,6 @@ export const getServerSideProps = async (context: any) => {
     where: { slug },
     select: { ...blogSelect, id: true }
   });
-
-  console.log(blog);
 
   return {
     props: {

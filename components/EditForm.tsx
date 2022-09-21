@@ -42,15 +42,8 @@ const defaultSocialInputs = [
 
 const defaultBaseInputs = [
   {
-    id: 'title',
-    label: 'title',
-    component: Input,
-    placeholder: '',
-    helper: ''
-  },
-  {
-    id: 'author',
-    label: 'author',
+    id: 'blogName',
+    label: 'blogName',
     component: Input,
     placeholder: '',
     helper: ''
@@ -114,27 +107,6 @@ const integrations = [
     component: Input,
     placeholder: '',
     helper: ''
-  },
-  {
-    id: 'convertKitApiKey',
-    label: 'convertKitApiKey ',
-    component: Input,
-    placeholder: '',
-    helper: ''
-  },
-  {
-    id: 'umamiId',
-    label: 'Umami id ',
-    component: Input,
-    placeholder: '',
-    helper: ''
-  },
-  {
-    id: 'umamiUrl',
-    label: 'Umami Url ',
-    component: Input,
-    placeholder: '',
-    helper: ''
   }
 ];
 
@@ -144,11 +116,9 @@ export default function EditForm({
   handleSubmit,
   formState,
   setValue,
-  session,
   onSubmitForm,
   control
 }: any) {
-  console.log(blog);
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmitForm)}>

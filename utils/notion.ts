@@ -35,11 +35,15 @@ export const getAllArticles = async (databaseId, notionSecret) => {
 const mapArticleProperties = article => {
   const { id, properties } = article;
 
+  const summary = properties?.Summary.rich_text[0]?.plain_text ?? ''
+  const title = properties?.Name.title[0].plain_text || ''
+  const categories = properties?.Categories?.multi_select.map((category: any) => category.name) || []
+
+
   return {
     id: id,
-    title: properties?.Name.title[0].plain_text || '',
-    categories:
-      properties?.Categories?.multi_select.map((category: any) => category.name) || [],
+    title,
+    categories,
     author: {
       name: properties.Author.created_by.name,
       imageUrl: properties.Author.created_by.avatar_url
@@ -50,7 +54,10 @@ const mapArticleProperties = article => {
       '/image-background.png',
     publishedDate: properties.Published?.date?.start,
     lastEditedAt: properties.LastEdited?.last_edited_time,
-    summary: properties?.Summary.rich_text[0]?.plain_text ?? ''
+    summary,
+    fullText: [summary, title, categories].map(item => (Array.isArray(item) ? item.join(' ') : item))
+    .join(' ')
+    .toLowerCase()
   };
 };
 
@@ -98,7 +105,7 @@ export const getMoreArticlesToSuggest = async (databaseId, currentArticleTitle, 
     mapArticleProperties(article)
   );
 
-  return shuffleArray(moreArticles).slice(0, 2);
+  return shuffleArray(moreArticles).slice(0, 3);
 };
 
 export const getArticlePage = (data, slug) => {
@@ -164,3 +171,5 @@ export const getArticlePageData = async (page: any, slug: any, databaseId, notio
     moreArticles
   };
 };
+
+

@@ -1,3 +1,4 @@
+import { IconCross, IconSearch } from '@tabler/icons';
 import ArticleList from 'components/ArticleList';
 import Category from 'components/Category';
 import Container from 'components/Container';
@@ -9,10 +10,11 @@ import { filterArticles } from 'utils/filterArticles';
 import { convertToArticleList, getAllArticles } from 'utils/notion';
 import prisma, { blogSelect } from 'utils/prisma';
 
-export default function Index({ articles, categories, blog, allblog }: any) {
+export default function Index({ articles, categories, blog }: any) {
   const [selectedTag, setSelectedTag] = useState<string>(null);
+  const [searchValue, setSearchValue] = useState('');
 
-  const filteredArticles = filterArticles(articles, selectedTag);
+  const filteredArticles = filterArticles(articles, selectedTag, searchValue);
 
   if (!blog) {
     return (
@@ -25,22 +27,46 @@ export default function Index({ articles, categories, blog, allblog }: any) {
 
   return (
     <Layout blog={blog}>
-      <HeroHeader blog={blog} />
-      <div className="flex flex-wrap justify-center gap-4 mt-8">
-        {categories.map(tag => (
-          <Category
-            tag={tag}
-            key={tag}
-            selectedTag={selectedTag}
-            setSelectedTag={setSelectedTag}
-          />
-        ))}
-      </div>
+      {blog?.headerTitle && <HeroHeader blog={blog} />}
+
       <Container>
-        <div className="py-8">
-          <div className="my-8 text-3xl font-bold text-gray-900">
-            {!selectedTag ? 'Latest articles' : `${selectedTag} articles`}
+        <div className="py-12">
+          <div className="mb-10 space-y-4">
+            <div className="mb-2 text-4xl font-bold text-gray-900 ">
+              {!selectedTag
+                ? `${
+                    searchValue.length > 0 ? filteredArticles.length : 'Latest'
+                  } articles`
+                : `${selectedTag} articles`}
+            </div>
+
+            <div className="relative max-w-md">
+              <input
+                className="block w-full px-3 py-2 text-gray-700 border border-gray-300 rounded"
+                type="text"
+                placeholder="Search articles"
+                value={searchValue}
+                onChange={(e: any) => {
+                  const value = e.target.value;
+                  setSelectedTag(null);
+                  setSearchValue(value);
+                }}
+              />
+              <IconSearch className="absolute w-5 text-gray-400 right-4 top-2" />
+            </div>
+            <div className="flex flex-wrap justify-start gap-4">
+              {categories.map(tag => (
+                <Category
+                  tag={tag}
+                  key={tag}
+                  selectedTag={selectedTag}
+                  setSearchValue={setSearchValue}
+                  setSelectedTag={setSelectedTag}
+                />
+              ))}
+            </div>
           </div>
+
           <ArticleList articles={filteredArticles} />
         </div>
       </Container>
@@ -65,7 +91,7 @@ export async function getServerSideProps(context: any) {
       select: blogSelect
     });
 
-    if (!blog?.title) {
+    if (!blog?.slug) {
       return {
         props: {
           profile: null
@@ -86,5 +112,6 @@ export async function getServerSideProps(context: any) {
     };
   } catch (error) {
     console.log(error);
+    return;
   }
 }

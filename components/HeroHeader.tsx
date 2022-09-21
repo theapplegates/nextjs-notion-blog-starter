@@ -9,9 +9,7 @@ export default function HeroHeader({ blog }: any) {
         {blog?.profileUrl && (
           <img
             src={blog.profileUrl}
-            className="mx-auto rounded-full"
-            width={96}
-            height={96}
+            className="w-24 h-24 mx-auto rounded-full"
             alt="profile"
           />
         )}

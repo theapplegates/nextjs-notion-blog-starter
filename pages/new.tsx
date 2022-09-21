@@ -1,4 +1,4 @@
-import { getSession, signIn } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import axios, { AxiosRequestConfig } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
@@ -12,7 +12,8 @@ const timezone = Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone || '';
 const date = new Date();
 const timezoneOffset = date?.getTimezoneOffset()?.toString() || '';
 
-export default function Index({ profile, session }: any) {
+export default function Index({ profile }: any) {
+  const { data: session } = useSession();
   const { register, handleSubmit, setValue, watch, control } = useForm({
     defaultValues: profile
   });
@@ -25,7 +26,7 @@ export default function Index({ profile, session }: any) {
         <div
           onClick={e => {
             e.preventDefault();
-            signIn('google', { callbackUrl: '/edit' });
+            signIn('google', { callbackUrl: '/' });
           }}
         >
           <button>
@@ -85,7 +86,6 @@ export const getServerSideProps = async (context: any) => {
   if (!session?.user?.email) {
     return {
       props: {
-        session: null,
         profile: null
       }
     };
@@ -93,7 +93,6 @@ export const getServerSideProps = async (context: any) => {
 
   return {
     props: {
-      session,
       profile: null
     }
   };

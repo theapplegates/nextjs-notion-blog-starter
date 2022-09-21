@@ -5,8 +5,6 @@ const updateBlog = async (req: any, res: any) => {
   try {
     const {
       id,
-      title,
-      author,
       slug,
       headerTitle,
       profileUrl,
@@ -18,11 +16,6 @@ const updateBlog = async (req: any, res: any) => {
       linkedin,
       notionSecret,
       notionBlogDatabaseId,
-      convertkitFormid,
-      websiteUrl,
-      convertKitApiKey,
-      umamiId,
-      umamiUrl
     } = req.body;
 
     const session = await getSession({ req });
@@ -33,7 +26,6 @@ const updateBlog = async (req: any, res: any) => {
 
     const blog = await prisma.blogWebsite.findFirst(id)
 
-    console.log('blog', blog)
 
     if(blog.email !== session?.user?.email) {
       return res.status(402);
@@ -46,8 +38,6 @@ const updateBlog = async (req: any, res: any) => {
       data: {
         updatedAt: new Date(),
         email: blog.email,
-        title,
-        author,
         slug,
         headerTitle,
         profileUrl,
@@ -59,11 +49,7 @@ const updateBlog = async (req: any, res: any) => {
         linkedin,
         notionSecret,
         notionBlogDatabaseId,
-        convertkitFormid,
-        websiteUrl,
-        convertKitApiKey,
-        umamiId,
-        umamiUrl
+  
       }
     });
 

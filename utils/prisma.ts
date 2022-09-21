@@ -14,8 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 export default prisma;
 
 export const blogSelect = {
-  title: true,
-  author: true,
+  blogName: true,
   slug: true,
   headerTitle: true,
   profileUrl: true,
@@ -27,11 +26,6 @@ export const blogSelect = {
   linkedin: true,
   notionSecret: true,
   notionBlogDatabaseId: true,
-  convertkitFormid: true,
-  websiteUrl: true,
-  convertKitApiKey: true,
-  umamiId: true,
-  umamiUrl: true
 };
 
 export const getProfile = async (slug: string) => {

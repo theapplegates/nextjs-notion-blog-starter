@@ -36,7 +36,6 @@ const ArticlePage = ({
   return (
     <>
       <Layout
-        title={title}
         description={summary}
         imageUrl={ogImage}
         date={new Date(publishedDate).toISOString()}

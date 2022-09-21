@@ -11,7 +11,7 @@ export function MetaHead(props) {
       <title>{titleName}</title>
       <meta name="robots" content="follow, index" />
       <meta content={description || titleName} name="description" />
-      <meta property="og:site_name" content={blog?.author} />
+      <meta property="og:site_name" content={titleName} />
       <meta property="og:description" content={description} />
       <meta property="og:title" content={blog?.title} />
       <meta property="og:image" content={imageUrl || blog?.ogBanner} />

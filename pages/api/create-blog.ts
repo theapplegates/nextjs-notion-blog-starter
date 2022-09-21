@@ -9,8 +9,6 @@ function getRandomArbitrary(min: number, max: number) {
 const createBlog = async (req: any, res: any) => {
   try {
     const {
-      title,
-      author,
       slug,
       headerTitle,
       profileUrl,
@@ -22,11 +20,7 @@ const createBlog = async (req: any, res: any) => {
       linkedin,
       notionSecret,
       notionBlogDatabaseId,
-      convertkitFormid,
-      websiteUrl,
-      convertKitApiKey,
-      umamiId,
-      umamiUrl
+
     } = req.body;
 
     const session = await getSession({ req });
@@ -43,8 +37,6 @@ const createBlog = async (req: any, res: any) => {
 
     const profile = await prisma.blogWebsite.create({
       data: {
-        title,
-        author,
         headerTitle,
         profileUrl,
         headerDescription,
@@ -55,18 +47,12 @@ const createBlog = async (req: any, res: any) => {
         linkedin,
         notionSecret,
         notionBlogDatabaseId,
-        websiteUrl: websiteUrl || '',
-        convertkitFormid: convertkitFormid || '',
-        convertKitApiKey,
-        umamiId,
-        umamiUrl,
         slug: slug || autoSlug,
         email: session.user.email,
         user: { connect: { email: session.user.email } }
       }
     });
 
-    console.log('api called', profile);
 
     return res.status(200).json(profile);
   } catch (error) {
