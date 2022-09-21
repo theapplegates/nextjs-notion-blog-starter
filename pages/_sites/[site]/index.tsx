@@ -49,38 +49,42 @@ export default function Index({ articles, categories, blog, allblog }: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  const { site } = context.query;
+  try {
+    const { site } = context.query;
 
-  if (!site) {
-    return {
-      props: {
-        profile: null
-      }
-    };
-  }
-
-  const blog = await prisma.blogWebsite.findFirst({
-    where: { slug: site },
-    select: blogSelect
-  });
-
-  if (!blog?.title) {
-    return {
-      props: {
-        profile: null
-      }
-    };
-  }
-
-  const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret);
-
-  const { articles, categories } = convertToArticleList(data);
-
-  return {
-    props: {
-      blog,
-      articles,
-      categories
+    if (!site) {
+      return {
+        props: {
+          profile: null
+        }
+      };
     }
-  };
+
+    const blog = await prisma.blogWebsite.findFirst({
+      where: { slug: site },
+      select: blogSelect
+    });
+
+    if (!blog?.title) {
+      return {
+        props: {
+          profile: null
+        }
+      };
+    }
+
+    const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret);
+
+    const { articles, categories } = convertToArticleList(data);
+
+    return {
+      props: {
+        blog,
+        articles,
+        categories
+      }
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }
