@@ -105,8 +105,10 @@ const ArticlePage = ({
 export const getServerSideProps = async context => {
   const { site, slug, route } = context.query;
 
+  const findOptions = site.includes('.') ? { customDomain: site } : { slug: site };
+
   const blog = await prisma.blogWebsite.findFirst({
-    where: { slug: site },
+    where: findOptions,
     select: blogSelect
   });
 

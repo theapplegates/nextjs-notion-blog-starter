@@ -72,5 +72,7 @@ model BlogWebsite {
   linkedin             String?
   notionSecret         String?
   notionBlogDatabaseId String
+  customDomain         String?
+  settingData          String?
   user                 User     @relation(fields: [userId], references: [id])
 }

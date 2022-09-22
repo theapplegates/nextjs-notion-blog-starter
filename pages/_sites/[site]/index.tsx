@@ -95,8 +95,10 @@ export async function getServerSideProps(context: any) {
       };
     }
 
+    const findOptions = site.includes('.') ? { customDomain: site } : { slug: site };
+
     const blog = await prisma.blogWebsite.findFirst({
-      where: { slug: site },
+      where: findOptions,
       select: blogSelect
     });
 
