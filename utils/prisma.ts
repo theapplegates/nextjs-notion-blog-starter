@@ -26,6 +26,7 @@ export const blogSelect = {
   linkedin: true,
   notionSecret: true,
   notionBlogDatabaseId: true,
+  customDomain: true
 };
 
 export const getProfile = async (slug: string) => {

@@ -5,15 +5,16 @@ const createCustomDomain = async (req: any, res: any) => {
   const { id, customDomain } = req.body;
 
   try {
-    const options = {
+    const config: any = {
+      url: `https://api.vercel.com/v9/projects/${process.env.VERCEL_PROJECT_ID}/domains/${customDomain}`,
+      method: 'delete',
       headers: {
         Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
         'Content-Type': 'application/json'
       }
     };
 
-    await axios.delete(`https://api.vercel.com/v6/domains/${customDomain}`, options);
-
+    await axios(config);
     await prisma.blogWebsite.update({
       where: {
         id
@@ -22,8 +23,12 @@ const createCustomDomain = async (req: any, res: any) => {
         customDomain: null
       }
     });
+
+    return res.status(200).json('deleted');
   } catch (error) {
-    console.log(error);
+    console.log(error.data);
+
+    return res.status(401).json(error);
   }
 };
 

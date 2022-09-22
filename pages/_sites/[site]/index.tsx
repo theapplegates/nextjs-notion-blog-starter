@@ -1,4 +1,5 @@
 import { IconSearch } from '@tabler/icons';
+import axios from 'axios';
 import ArticleList from 'components/ArticleList';
 import Category from 'components/Category';
 import Container from 'components/Container';
@@ -6,7 +7,7 @@ import HeroHeader from 'components/HeroHeader';
 import { Layout } from 'layouts/Layout';
 import { navSettings } from 'layouts/Navbar';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { filterArticles } from 'utils/filterArticles';
 import { convertToArticleList, getAllArticles } from 'utils/notion';
 import prisma, { blogSelect } from 'utils/prisma';
