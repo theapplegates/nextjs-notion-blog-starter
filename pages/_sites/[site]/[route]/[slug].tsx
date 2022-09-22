@@ -17,6 +17,7 @@ const ArticlePage = ({
   publishedDate,
   lastEditedAt,
   summary,
+  route,
   moreArticles,
   blog
 }) => {
@@ -39,7 +40,7 @@ const ArticlePage = ({
         description={summary}
         imageUrl={ogImage}
         date={new Date(publishedDate).toISOString()}
-        ogUrl={`/blog/${slug}`}
+        ogUrl={`/${slug}`}
         blog={blog}
       >
         <div>
@@ -85,10 +86,10 @@ const ArticlePage = ({
           <div className="py-12 border-t">
             <Container>
               <div className="flex items-center justify-between my-8">
-                <div className="text-3xl font-bold text-gray-900">Latest articles</div>
+                <div className="text-3xl font-bold text-gray-900">Latest {route}</div>
                 <Link href="/">
                   <span className="font-semibold text-gray-900 cursor-pointer">
-                    More articles ➜
+                    More {route} ➜
                   </span>
                 </Link>
               </div>
@@ -102,26 +103,28 @@ const ArticlePage = ({
 };
 
 export const getServerSideProps = async context => {
-  const { site, slug } = context.query;
+  const { site, slug, route } = context.query;
 
   const blog = await prisma.blogWebsite.findFirst({
     where: { slug: site },
     select: blogSelect
   });
 
-  const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret);
+  const data = await getAllArticles(blog.notionBlogDatabaseId, blog.notionSecret, '');
   const page = getArticlePage(data, slug);
   const result = await getArticlePageData(
     page,
     slug,
     blog.notionBlogDatabaseId,
-    blog.notionSecret
+    blog.notionSecret,
+    route
   );
 
   return {
     props: {
       ...result,
-      blog
+      blog,
+      route
     }
   };
 };

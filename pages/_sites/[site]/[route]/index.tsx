@@ -4,7 +4,6 @@ import Category from 'components/Category';
 import Container from 'components/Container';
 import HeroHeader from 'components/HeroHeader';
 import { Layout } from 'layouts/Layout';
-import { navSettings } from 'layouts/Navbar';
 import Link from 'next/link';
 import { useState } from 'react';
 import { filterArticles } from 'utils/filterArticles';
@@ -14,8 +13,6 @@ import prisma, { blogSelect } from 'utils/prisma';
 export default function Index({ articles, categories, blog, routes, route }: any) {
   const [selectedTag, setSelectedTag] = useState<string>(null);
   const [searchValue, setSearchValue] = useState('');
-
-  console.log('routes', routes);
 
   const filteredArticles = filterArticles(articles, selectedTag, searchValue);
 
@@ -79,13 +76,7 @@ export default function Index({ articles, categories, blog, routes, route }: any
 
 export async function getServerSideProps(context: any) {
   try {
-    const { site } = context.query;
-
-    const route = navSettings.links
-      .find(item => item.isDefault === true)
-      .name.toLowerCase();
-
-    console.log('site', site);
+    const { site, route } = context.query;
 
     if (!site) {
       return {

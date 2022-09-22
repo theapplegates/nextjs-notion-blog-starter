@@ -7,13 +7,13 @@ type Props = {
   article: Article;
 };
 
-export default function ArticleCard({ article }: Props) {
+export default function ArticleCard({ article, route }: any) {
   const slug = slugify(article.title).toLowerCase();
 
   const formattedTime = getLocalizedDate(article.publishedDate);
 
   return (
-    <a href={`/blog/${slug}`}>
+    <a href={`${route}/${slug}`}>
       <div className="flex flex-col overflow-hidden cursor-pointer group">
         <div className="relative">
           <div className="absolute">

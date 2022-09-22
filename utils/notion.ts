@@ -1,10 +1,7 @@
 import { Client } from '@notionhq/client';
 import slugify from 'slugify';
 
-
-
-export const getAllArticles = async (databaseId, notionSecret) => {
-
+export const getAllArticles = async (databaseId, notionSecret, route) => {
   const notion = new Client({
     auth: notionSecret
   });
@@ -12,11 +9,17 @@ export const getAllArticles = async (databaseId, notionSecret) => {
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
-      or: [
+      and: [
         {
           property: 'Status',
           select: {
             equals: '✅ Published'
+          }
+        },
+        {
+          property: 'Route',
+          select: {
+            equals: route
           }
         }
       ]
@@ -35,10 +38,12 @@ export const getAllArticles = async (databaseId, notionSecret) => {
 const mapArticleProperties = article => {
   const { id, properties } = article;
 
-  const summary = properties?.Summary.rich_text[0]?.plain_text ?? ''
-  const title = properties?.Name.title[0].plain_text || ''
-  const categories = properties?.Categories?.multi_select.map((category: any) => category.name) || []
+  const summary = properties?.Summary.rich_text[0]?.plain_text ?? '';
+  const title = properties?.Name.title[0].plain_text || '';
+  const categories =
+    properties?.Categories?.multi_select.map((category: any) => category.name) || [];
 
+  const route = properties?.Route?.select?.name || '';
 
   return {
     id: id,
@@ -54,15 +59,18 @@ const mapArticleProperties = article => {
       '/image-background.png',
     publishedDate: properties.Published?.date?.start,
     lastEditedAt: properties.LastEdited?.last_edited_time,
+    route,
     summary,
-    fullText: [summary, title, categories].map(item => (Array.isArray(item) ? item.join(' ') : item))
-    .join(' ')
-    .toLowerCase()
+    fullText: [summary, title, categories]
+      .map(item => (Array.isArray(item) ? item.join(' ') : item))
+      .join(' ')
+      .toLowerCase()
   };
 };
 
 export const convertToArticleList = (tableData: any) => {
   let categories: string[] = [];
+  let routes: string[] = [];
 
   const articles = tableData.map((article: any) => {
     const { properties } = article;
@@ -74,13 +82,24 @@ export const convertToArticleList = (tableData: any) => {
       }
     });
 
+    const route = properties?.Route?.select?.name || '';
+
+    if (!routes.includes(route) && route) {
+      routes.push(route);
+    }
+
     return mapArticleProperties(article);
   });
 
-  return { articles, categories };
+  return { articles, categories, routes };
 };
 
-export const getMoreArticlesToSuggest = async (databaseId, currentArticleTitle, notion) => {
+export const getMoreArticlesToSuggest = async (
+  databaseId,
+  currentArticleTitle,
+  notion,
+  route
+) => {
   const response = await notion.databases.query({
     database_id: databaseId,
     filter: {
@@ -89,6 +108,12 @@ export const getMoreArticlesToSuggest = async (databaseId, currentArticleTitle, 
           property: 'Status',
           select: {
             equals: '✅ Published'
+          }
+        },
+        {
+          property: 'Route',
+          select: {
+            equals: route
           }
         },
         {
@@ -136,8 +161,13 @@ export function shuffleArray(array: Array<any>) {
   return array;
 }
 
-export const getArticlePageData = async (page: any, slug: any, databaseId, notionSecret) => {
-
+export const getArticlePageData = async (
+  page: any,
+  slug: any,
+  databaseId,
+  notionSecret,
+  route
+) => {
   const notion = new Client({
     auth: notionSecret
   });
@@ -147,7 +177,12 @@ export const getArticlePageData = async (page: any, slug: any, databaseId, notio
 
   title = page.properties.Name.title[0].plain_text;
 
-  const moreArticles: any = await getMoreArticlesToSuggest(databaseId, title, notion);
+  const moreArticles: any = await getMoreArticlesToSuggest(
+    databaseId,
+    title,
+    notion,
+    route
+  );
 
   let blocks = await notion.blocks.children.list({
     block_id: page.id
@@ -171,5 +206,3 @@ export const getArticlePageData = async (page: any, slug: any, databaseId, notio
     moreArticles
   };
 };
-
-
