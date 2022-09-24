@@ -6,9 +6,9 @@ import HeroHeader from 'components/HeroHeader';
 import { Layout } from 'layouts/Layout';
 import Link from 'next/link';
 import { useState } from 'react';
-import { filterArticles } from 'utils/filterArticles';
-import { convertToArticleList, getAllArticles } from 'utils/notion';
-import prisma, { blogSelect } from 'utils/prisma';
+import { filterArticles } from 'lib/filterArticles';
+import { convertToArticleList, getAllArticles } from 'lib/notion';
+import prisma, { blogSelect } from 'lib/prisma';
 
 export default function Index({ articles, categories, blog, routes, route }: any) {
   const [selectedTag, setSelectedTag] = useState<string>(null);

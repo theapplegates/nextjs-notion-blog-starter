@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import prisma, { blogSelect } from 'utils/prisma';
+import prisma, { blogSelect } from 'lib/prisma';
 
 const getBlogs = async (req: any, res: any) => {
   try {

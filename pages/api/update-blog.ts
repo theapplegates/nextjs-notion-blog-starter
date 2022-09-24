@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import prisma from 'utils/prisma';
+import prisma from 'lib/prisma';
 
 const updateBlog = async (req: any, res: any) => {
   try {
@@ -13,9 +13,11 @@ const updateBlog = async (req: any, res: any) => {
       ogBanner,
       github,
       twitter,
+      blogName,
       linkedin,
       notionSecret,
-      notionBlogDatabaseId,
+      settingData,
+      notionBlogDatabaseId
     } = req.body;
 
     const session = await getSession({ req });
@@ -24,10 +26,9 @@ const updateBlog = async (req: any, res: any) => {
       return res.status(401);
     }
 
-    const blog = await prisma.blogWebsite.findFirst(id)
+    const blog = await prisma.blogWebsite.findFirst(id);
 
-
-    if(blog.email !== session?.user?.email) {
+    if (blog.email !== session?.user?.email) {
       return res.status(402);
     }
 
@@ -43,19 +44,20 @@ const updateBlog = async (req: any, res: any) => {
         profileUrl,
         headerDescription,
         footerText,
+        blogName,
         ogBanner,
         github,
         twitter,
         linkedin,
         notionSecret,
-        notionBlogDatabaseId,
-  
+        settingData,
+        notionBlogDatabaseId
       }
     });
 
     return res.status(200).json(profile);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).send(error);
   }
 };

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import prisma from 'utils/prisma';
+import prisma from 'lib/prisma';
+
+// https://vercel.com/docs/rest-api#endpoints/domains
 
 const createCustomDomain = async (req: any, res: any) => {
   const { id, customDomain } = req.body;
@@ -32,7 +34,6 @@ const createCustomDomain = async (req: any, res: any) => {
     return res.status(200).json('deleted');
   } catch (error) {
     console.log(error);
-
     return res.status(401).json(error);
   }
 };

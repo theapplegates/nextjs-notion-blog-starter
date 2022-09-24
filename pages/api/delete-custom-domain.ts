@@ -1,5 +1,5 @@
 import axios from 'axios';
-import prisma from 'utils/prisma';
+import prisma from 'lib/prisma';
 
 const createCustomDomain = async (req: any, res: any) => {
   const { id, customDomain } = req.body;

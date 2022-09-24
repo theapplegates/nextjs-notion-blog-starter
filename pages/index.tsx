@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getSession, signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import prisma, { blogSelect } from 'utils/prisma';
+import prisma, { blogSelect } from 'lib/prisma';
 import { signOut } from 'next-auth/react';
 
 export default function Index({ blogs }) {

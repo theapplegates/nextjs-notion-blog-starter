@@ -61,6 +61,7 @@ model BlogWebsite {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   slug                 String   @unique
+  notionBlogDatabaseId String
   blogName             String?
   headerTitle          String?
   headerDescription    String?
@@ -71,7 +72,6 @@ model BlogWebsite {
   twitter              String?
   linkedin             String?
   notionSecret         String?
-  notionBlogDatabaseId String
   customDomain         String?
   settingData          String?
   user                 User     @relation(fields: [userId], references: [id])

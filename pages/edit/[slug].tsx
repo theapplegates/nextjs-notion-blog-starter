@@ -5,14 +5,17 @@ import { useRouter } from 'next/router';
 
 import EditForm from '../../components/EditForm';
 import Container from '../../components/Container';
-import prisma, { blogSelect } from 'utils/prisma';
+import prisma, { blogSelect } from 'lib/prisma';
 import { useEffect, useState } from 'react';
+import Card from 'components/Card';
+import { Input } from 'components/Form';
 
 export default function Index({ blog, session }: any) {
   const { register, handleSubmit, setValue, watch, control } = useForm({
     defaultValues: blog
   });
   const router = useRouter();
+  const [customDomainValue, setCustomDomainValue] = useState(blog?.customDomain);
 
   const [domainConfig, setDomainConfig]: any = useState({});
 
@@ -60,7 +63,7 @@ export default function Index({ blog, session }: any) {
   const onSubmitForm = async (values: any) => {
     const config: AxiosRequestConfig = {
       url: blog?.slug ? '/api/update-blog' : '/api/create-blog',
-      data: { ...values, id: blog.id },
+      data: { ...values, id: blog.id, settingData: values?.settingData },
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
@@ -89,7 +92,39 @@ export default function Index({ blog, session }: any) {
         <Container>
           <div className="flex justify-center lg:space-x-8">
             <EditForm {...editFormProps} />
+          </div>
 
+          <Card className="px-4 py-5 bg-white sm:rounded sm:p-6">
+            <div className="mb-4 md:col-span-1">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
+                Custom domain
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">Add custom domain</p>
+            </div>
+            <div className="mt-5 space-y-6 md:mt-0 md:col-span-2">
+              <Input
+                label="custom domain"
+                value={customDomainValue}
+                onChange={e => setCustomDomainValue(e.target.value)}
+              />
+              <div
+                onClick={async () => {
+                  const config: any = {
+                    url: '/api/create-custom-domain',
+                    data: { id: blog.id, customDomain: customDomainValue },
+                    method: 'post',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  };
+                  const res = await axios(config);
+
+                  console.log(res);
+                }}
+              >
+                add domain
+              </div>
+            </div>
             <div>
               <div className="space-y-4 text-center">
                 <div className="text-lg font-medium leading-6 text-gray-900">
@@ -137,10 +172,6 @@ export default function Index({ blog, session }: any) {
                           className="inline-flex items-center px-4 py-1 text-sm font-medium text-red-800 rounded cursor-pointer hover:bg-red-100"
                           onClick={async () => {
                             if (confirm('Are you sure you want to remove this domain?'))
-                              // await deleteDomain({
-                              //   customDomain: directory?.customDomain,
-                              //   directoryId: directory.id
-                              // });
                               return await axios({
                                 url: '/api/delete-custom-domain',
                                 data: { id: blog.id, customDomain: blog.customDomain },
@@ -189,7 +220,7 @@ export default function Index({ blog, session }: any) {
                 </table>
               </div>
             </div>
-          </div>
+          </Card>
         </Container>
       </div>
     </div>

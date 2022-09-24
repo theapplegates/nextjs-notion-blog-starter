@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react';
 import slugify from 'slugify';
-import prisma from 'utils/prisma';
+import prisma from 'lib/prisma';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -15,12 +15,13 @@ const createBlog = async (req: any, res: any) => {
       headerDescription,
       footerText,
       ogBanner,
+      blogName,
+      settingData,
       github,
       twitter,
       linkedin,
       notionSecret,
-      notionBlogDatabaseId,
-
+      notionBlogDatabaseId
     } = req.body;
 
     const session = await getSession({ req });
@@ -33,7 +34,7 @@ const createBlog = async (req: any, res: any) => {
 
     const autoSlug = slugify(session?.user?.name).toLowerCase() + random2Numbers;
 
-    console.log('slug', slug)
+    console.log('slug', slug);
 
     const profile = await prisma.blogWebsite.create({
       data: {
@@ -42,6 +43,8 @@ const createBlog = async (req: any, res: any) => {
         headerDescription,
         footerText,
         ogBanner,
+        settingData,
+        blogName,
         github,
         twitter,
         linkedin,
@@ -52,7 +55,6 @@ const createBlog = async (req: any, res: any) => {
         user: { connect: { email: session.user.email } }
       }
     });
-
 
     return res.status(200).json(profile);
   } catch (error) {

@@ -1,4 +1,4 @@
-import { Input } from '../components/Form';
+import { Input, TextArea } from '../components/Form';
 import Card from '../components/Card';
 
 import {
@@ -7,7 +7,6 @@ import {
   IconBrandTwitter,
   IconHome
 } from '@tabler/icons';
-import axios from 'axios';
 
 const defaultSocialInputs = [
   {
@@ -89,6 +88,13 @@ const defaultBaseInputs = [
     id: 'ogBanner',
     label: 'ogBanner',
     component: Input,
+    placeholder: '',
+    helper: ''
+  },
+  {
+    id: 'settingData',
+    label: 'settingData',
+    component: TextArea,
     placeholder: '',
     helper: ''
   }
@@ -196,41 +202,6 @@ export default function EditForm({
                     setValue={setValue}
                   />
                 ))}
-            </div>
-          </Card>
-
-          <Card className="px-4 py-5 bg-white sm:rounded sm:p-6">
-            <div className="mb-4 md:col-span-1">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Custom domain
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">Add custom domain</p>
-            </div>
-            <div className="mt-5 space-y-6 md:mt-0 md:col-span-2">
-              <Input
-                label="custom domain"
-                name="customDomain"
-                register={register}
-                error={formState?.errors['customDomain']}
-                setValue={setValue}
-              />
-              <div
-                onClick={async () => {
-                  const config: any = {
-                    url: '/api/create-custom-domain',
-                    data: { id: blog.id, customDomain: 'phung.io' },
-                    method: 'post',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    }
-                  };
-                  const res = await axios(config);
-
-                  console.log(res);
-                }}
-              >
-                add domain
-              </div>
             </div>
           </Card>
 

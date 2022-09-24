@@ -16,6 +16,7 @@ export default prisma;
 export const blogSelect = {
   blogName: true,
   slug: true,
+  settingData: true,
   headerTitle: true,
   profileUrl: true,
   headerDescription: true,

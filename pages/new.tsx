@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import EditForm from '../components/EditForm';
 import Container from '../components/Container';
-import prisma, { blogSelect } from 'utils/prisma';
+import prisma, { blogSelect } from 'lib/prisma';
 
 const timezone = Intl?.DateTimeFormat()?.resolvedOptions()?.timeZone || '';
 

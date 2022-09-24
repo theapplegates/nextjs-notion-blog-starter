@@ -1,14 +1,14 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
-import { getAllArticles, getArticlePage, getArticlePageData } from 'utils/notion';
+import { getAllArticles, getArticlePage, getArticlePageData } from 'lib/notion';
 import { Layout } from 'layouts/Layout';
 import Image from 'next/image';
 import { renderBlocks } from 'components/notionBlocks/renderBlocks';
-import getLocalizedDate from 'utils/getLocalizedDate';
+import getLocalizedDate from 'lib/getLocalizedDate';
 import Container from 'components/Container';
 import slugify from 'slugify';
 import ArticleList from 'components/ArticleList';
-import prisma, { blogSelect } from 'utils/prisma';
+import prisma, { blogSelect } from 'lib/prisma';
 
 const ArticlePage = ({
   content,

@@ -1,0 +1,7 @@
+{
+  "links": [
+    { "name": "Articles", "url": "/", "template": 3, "isDefault": true },
+    { "name": "Projects", "url": "/projects", "isDefault": false },
+    { "name": "Snippets", "url": "/snippets", "template": 2, "isDefault": false }
+  ]
+}

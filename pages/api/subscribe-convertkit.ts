@@ -1,4 +1,4 @@
-import isValidEmail from 'utils/isValidEmail';
+import isValidEmail from 'lib/isValidEmail';
 
 const subscribeConvertkit = async (req, res) => {
   const { email } = JSON.parse(req.body);
